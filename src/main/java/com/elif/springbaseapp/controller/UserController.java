@@ -1,5 +1,8 @@
 package com.elif.springbaseapp.controller;
 
+
+import com.elif.springbaseapp.dto.request.UserRequest;
+import com.elif.springbaseapp.dto.response.UserResponse;
 import com.elif.springbaseapp.entity.User;
 import com.elif.springbaseapp.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,19 +15,20 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
+
     @PostMapping("/save")
-    public User createUser(@RequestBody User user){
+    public UserResponse createUser(@RequestBody UserRequest user){
         return userService.createUser(user);
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id){
+    public UserResponse getUser(@PathVariable Long id){
         return userService.getUser(id);
     }
 
     @PutMapping("/update/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user){
-        return userService.updateUser(id, user);
+    public UserResponse updateUser(@PathVariable Long id, @RequestBody UserRequest request){
+        return userService.updateUser(id, request);
     }
 
     @DeleteMapping("/delete/{id}")
