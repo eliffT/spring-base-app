@@ -8,6 +8,9 @@ import com.elif.springbaseapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +20,9 @@ public class UserServiceImpl implements UserService {
 
     private final ModelMapper modelMapper;
 
+
     @Override
+    @Transactional   // default REQUIRED:  Mevcut bir transaction varsa kendisine dahil eder. Eğer mevcut bir işlem yoksa, yeni bir işlem başlatır.
     public UserResponse createUser(UserRequest request) {
         User user = modelMapper.map(request, User.class);
         User createUser = userRepository.save(user);

@@ -5,6 +5,7 @@ import com.elif.springbaseapp.dto.request.UserRequest;
 import com.elif.springbaseapp.dto.response.UserResponse;
 import com.elif.springbaseapp.entity.User;
 import com.elif.springbaseapp.service.impl.UserServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class UserController {
 
 
     @PostMapping("/save")
-    public UserResponse createUser(@RequestBody UserRequest user){
+    public UserResponse createUser(@Valid @RequestBody UserRequest user){
         return userService.createUser(user);
     }
 
