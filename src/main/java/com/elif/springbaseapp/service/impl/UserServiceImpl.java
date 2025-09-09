@@ -22,11 +22,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    @Transactional   // default REQUIRED:  Mevcut bir transaction varsa kendisine dahil eder. Eğer mevcut bir işlem yoksa, yeni bir işlem başlatır.
+    @Transactional
+    // default REQUIRED:  Mevcut bir transaction varsa kendisine dahil eder. Eğer mevcut bir işlem yoksa, yeni bir işlem başlatır.
     public UserResponse createUser(UserRequest request) {
         User user = modelMapper.map(request, User.class);
         User createUser = userRepository.save(user);
-        return modelMapper.map(createUser,UserResponse.class);
+        return modelMapper.map(createUser, UserResponse.class);
     }
 
     @Override
@@ -37,18 +38,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse updateUser(Long id, UserRequest request) {
         User userUpt = userRepository.findById(id).orElse(null);
         userUpt.setFirstName(request.getFirstName());
         userUpt.setLastName(request.getLastName());
         userUpt.setEmail(request.getEmail());
         userRepository.save(userUpt);
-        return modelMapper.map(userUpt,UserResponse.class);
+        return modelMapper.map(userUpt, UserResponse.class);
     }
 
+    /*  Propogation = REQUIRES_NEW:
+        - Bu metod çağrıldığında her zaman yeni bir transaction başlatır, varsa üstteki transaction geçici olarak askıya alınır.
+        - Yani bu metod kendi bağımsız transaction’ına sahiptir.
+    */
+
+    /*  Isolation = READ_COMMITTED:
+        - Bu transaction sadece commit edilmiş verileri görecektir.
+        - Dirty read yoktur; başkalarının commit etmediği değişiklikleri göremez.
+        - Başka transaction’ların henüz commit etmediği bir kullanıcıyı görmez.
+    */
+
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
     public void deleteUser(Long id) {
         User deleteUser = userRepository.findById(id).orElse(null);
-        userRepository.delete(deleteUser);
+        if (deleteUser != null) {
+            userRepository.delete(deleteUser);
+        }
     }
 }

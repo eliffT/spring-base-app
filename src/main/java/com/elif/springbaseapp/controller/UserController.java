@@ -3,7 +3,6 @@ package com.elif.springbaseapp.controller;
 
 import com.elif.springbaseapp.dto.request.UserRequest;
 import com.elif.springbaseapp.dto.response.UserResponse;
-import com.elif.springbaseapp.entity.User;
 import com.elif.springbaseapp.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public UserResponse updateUser(@PathVariable Long id, @RequestBody UserRequest request){
+    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest request){
         return userService.updateUser(id, request);
     }
 
@@ -36,5 +35,6 @@ public class UserController {
     public void deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
     }
+
 
 }
